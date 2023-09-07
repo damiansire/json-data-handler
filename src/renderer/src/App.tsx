@@ -4,13 +4,30 @@ import { useState } from 'react'
 
 function App(): JSX.Element {
   const [filePath, setFilePath] = useState('')
+  const [fileContent, setFileContent] = useState(null)
 
   const handleDrop = (event) => {
     event.preventDefault()
     const file = event.dataTransfer.files[0]
+
     if (file) {
-      const path = URL.createObjectURL(file)
-      setFilePath(path)
+      const reader = new FileReader()
+
+      reader.onload = (e) => {
+        const content = e.target.result
+        setFileContent(content)
+
+        try {
+          const jsonData = JSON.parse(content)
+          // jsonData ahora contiene el objeto JSON del archivo
+          console.log(jsonData)
+        } catch (error) {
+          console.error('Error al analizar el archivo JSON', error)
+        }
+      }
+
+      reader.readAsText(file)
+      setFilePath(file.path) // Esto establecerá la ruta del archivo real en Electron
     }
   }
 
@@ -20,11 +37,7 @@ function App(): JSX.Element {
 
   return (
     <div className="container">
-      <Versions></Versions>
-      <h1 style={{ textAlign: 'center' }}>Analiza tu json</h1>
-      <svg className="hero-logo" viewBox="0 0 900 300">
-        <use xlinkHref={`${icons}#electron`} />
-      </svg>
+      {/* ... tu JSX existente */}
       <div>
         <h1>Arrastra un archivo aquí:</h1>
         <div
@@ -37,6 +50,12 @@ function App(): JSX.Element {
           }}
         >
           {filePath ? <p>Ruta del archivo: {filePath}</p> : null}
+          {fileContent ? (
+            <div>
+              <h2>Contenido del archivo JSON:</h2>
+              <pre>{fileContent}</pre>
+            </div>
+          ) : null}
         </div>
       </div>
     </div>
