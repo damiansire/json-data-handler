@@ -1,15 +1,16 @@
 import Versions from './components/Versions'
 import icons from './assets/icons.svg'
 import { useState } from 'react'
+import JsonBox from './components/JsonBox'
 
 function App(): JSX.Element {
   const [filePath, setFilePath] = useState('')
   const [fileContent, setFileContent] = useState(null)
+  const [fileParsedContent, setFileParsedContent] = useState(null)
 
   const handleDrop = (event) => {
     event.preventDefault()
     const file = event.dataTransfer.files[0]
-
     if (file) {
       const reader = new FileReader()
 
@@ -19,6 +20,7 @@ function App(): JSX.Element {
 
         try {
           const jsonData = JSON.parse(content)
+          setFileParsedContent(jsonData)
           // jsonData ahora contiene el objeto JSON del archivo
           console.log(jsonData)
         } catch (error) {
@@ -37,27 +39,29 @@ function App(): JSX.Element {
 
   return (
     <div className="container">
-      {/* ... tu JSX existente */}
-      <div>
-        <h1>Arrastra un archivo aquí:</h1>
-        <div
-          onDrop={handleDrop}
-          onDragOver={handleDragOver}
-          style={{
-            width: '300px',
-            height: '300px',
-            border: '2px dashed #ccc'
-          }}
-        >
-          {filePath ? <p>Ruta del archivo: {filePath}</p> : null}
-          {fileContent ? (
-            <div>
-              <h2>Contenido del archivo JSON:</h2>
-              <pre>{fileContent}</pre>
-            </div>
-          ) : null}
+      {!fileParsedContent && (
+        <div>
+          <h1>Arrastra un archivo aquí:</h1>
+          <div
+            onDrop={handleDrop}
+            onDragOver={handleDragOver}
+            style={{
+              width: '300px',
+              height: '300px',
+              border: '2px dashed #ccc'
+            }}
+          ></div>
         </div>
-      </div>
+      )}
+      {filePath ? <p>Ruta del archivo: {filePath}</p> : null}
+      {fileParsedContent ? (
+        <div>
+          <h2>Contenido del archivo JSON:</h2>
+          {fileParsedContent.map((element) => {
+            return <JsonBox key={element.id} data={element}></JsonBox>
+          })}
+        </div>
+      ) : null}
     </div>
   )
 }
