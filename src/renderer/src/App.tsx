@@ -1,12 +1,10 @@
-import Versions from './components/Versions'
-import icons from './assets/icons.svg'
 import { useState } from 'react'
-import JsonBox from './components/JsonBox'
+import { getJSONShape } from 'json-scan'
+import JsonShapeBox from './components/JsonShapeBox'
 
 function App(): JSX.Element {
   const [filePath, setFilePath] = useState('')
-  const [fileContent, setFileContent] = useState(null)
-  const [fileParsedContent, setFileParsedContent] = useState(null)
+  const [jsonFormat, setJsonFormat] = useState(null)
 
   const handleDrop = (event) => {
     event.preventDefault()
@@ -15,13 +13,11 @@ function App(): JSX.Element {
       const reader = new FileReader()
 
       reader.onload = (e) => {
-        const content = e.target.result
-        setFileContent(content)
-
         try {
+          const content = e.target.result
           const jsonData = JSON.parse(content)
-          setFileParsedContent(jsonData)
-          // jsonData ahora contiene el objeto JSON del archivo
+          const jsonShape = getJSONShape(jsonData)
+          setJsonFormat(jsonShape)
           console.log(jsonData)
         } catch (error) {
           console.error('Error al analizar el archivo JSON', error)
@@ -39,7 +35,7 @@ function App(): JSX.Element {
 
   return (
     <div className="container">
-      {!fileParsedContent && (
+      {!jsonFormat && (
         <div>
           <h1>Arrastra un archivo aquí:</h1>
           <div
@@ -54,12 +50,18 @@ function App(): JSX.Element {
         </div>
       )}
       {filePath ? <p>Ruta del archivo: {filePath}</p> : null}
-      {fileParsedContent ? (
+      {jsonFormat ? (
         <div>
-          <h2>Contenido del archivo JSON:</h2>
-          {fileParsedContent.map((element) => {
-            return <JsonBox key={element.id} data={element}></JsonBox>
-          })}
+          <div>
+            <h2>Formato del json</h2>
+            <div style={{ display: 'flex' }}>
+              {jsonFormat.map((x, index) => (
+                <div key={index}>
+                  <JsonShapeBox data={x}></JsonShapeBox>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       ) : null}
     </div>
