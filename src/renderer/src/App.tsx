@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { getJSONShape } from 'json-scan'
 import JsonShapeBox from './components/JsonShapeBox'
+import DragAndDropZone from './components/DragAndDropZone'
 
 function App(): JSX.Element {
   const [filePath, setFilePath] = useState('')
@@ -36,18 +37,7 @@ function App(): JSX.Element {
   return (
     <div className="container">
       {!jsonFormat && (
-        <div>
-          <h1>Arrastra un archivo aquí:</h1>
-          <div
-            onDrop={handleDrop}
-            onDragOver={handleDragOver}
-            style={{
-              width: '300px',
-              height: '300px',
-              border: '2px dashed #ccc'
-            }}
-          ></div>
-        </div>
+        <DragAndDropZone handleDragOver={handleDragOver} handleDrop={handleDrop}></DragAndDropZone>
       )}
       {filePath ? <p>Ruta del archivo: {filePath}</p> : null}
       {jsonFormat ? (
