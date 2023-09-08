@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { getJSONShape } from 'json-scan'
 import JsonShapeBox from './components/JsonShapeBox'
 import DragAndDropZone from './components/DragAndDropZone'
-
+import './index.css'
 function App(): JSX.Element {
   const [filePath, setFilePath] = useState('')
   const [jsonFormat, setJsonFormat] = useState(null)
@@ -42,15 +42,13 @@ function App(): JSX.Element {
       {filePath ? <p>Ruta del archivo: {filePath}</p> : null}
       {jsonFormat ? (
         <div>
-          <div>
-            <h2>Formato del json</h2>
-            <div style={{ display: 'flex' }}>
-              {jsonFormat.map((x, index) => (
-                <div key={index}>
-                  <JsonShapeBox data={x}></JsonShapeBox>
-                </div>
-              ))}
-            </div>
+          <h2>Formato del json</h2>
+          <div style={{ display: 'flex' }}>
+            {jsonFormat.map((x, index) => (
+              <div key={index}>
+                <JsonShapeBox data={x}></JsonShapeBox>
+              </div>
+            ))}
           </div>
         </div>
       ) : null}
