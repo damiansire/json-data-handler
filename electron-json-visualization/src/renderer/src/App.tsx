@@ -7,7 +7,8 @@ function App(): JSX.Element {
   const [filePath, setFilePath] = useState('')
   const [jsonFormat, setJsonFormat] = useState(null)
 
-  const handleDrop = (event) => {
+  const handleDrop = (event): void => {
+    console.log('estoy aca')
     event.preventDefault()
     const file = event.dataTransfer.files[0]
     if (file) {
