@@ -4,3 +4,5 @@ out
 *.log*
 test-data.json
 data-dummy/
+venues.json
+venue.json
